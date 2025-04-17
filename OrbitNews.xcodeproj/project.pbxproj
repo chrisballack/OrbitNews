@@ -34,7 +34,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		DDEEA8CF2DB1404D00A52EAA /* OrbitNews */ = {
+		DD970BC32DB1B707007A5D19 /* OrbitNews */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = OrbitNews;
 			sourceTree = "<group>";
@@ -80,7 +80,7 @@
 		DDEEA8C42DB1404D00A52EAA = {
 			isa = PBXGroup;
 			children = (
-				DDEEA8CF2DB1404D00A52EAA /* OrbitNews */,
+				DD970BC32DB1B707007A5D19 /* OrbitNews */,
 				DDEEA8DD2DB1404E00A52EAA /* OrbitNewsTests */,
 				DDEEA8E72DB1404E00A52EAA /* OrbitNewsUITests */,
 				DDEEA8CE2DB1404D00A52EAA /* Products */,
@@ -113,7 +113,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				DDEEA8CF2DB1404D00A52EAA /* OrbitNews */,
+				DD970BC32DB1B707007A5D19 /* OrbitNews */,
 			);
 			name = OrbitNews;
 			packageProductDependencies = (

@@ -26,7 +26,7 @@ struct SwiftUIView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .ignoresSafeArea()
-            .background(Color("SplashBackgound"))
+            .background(.splashBackgound)
             .navigationDestination(for: String.self) { destination in
                 if destination == "Home" {
                     HomeView(navigationPath: $path)

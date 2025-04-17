@@ -73,6 +73,7 @@ struct ListView: View {
     @State private var visibleID: UUID?
     
     let columns = [GridItem(.flexible()), GridItem(.flexible())]
+    let title: String
     
     var body: some View {
         NavigationView {
@@ -128,7 +129,7 @@ struct ListView: View {
                     }
                 }
             }
-            .navigationTitle("News")
+            .navigationTitle(title)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
@@ -148,5 +149,5 @@ struct ListView: View {
 // MARK: - Preview
 
 #Preview {
-    ListView()
+    ListView(title: "Noticias")
 }
