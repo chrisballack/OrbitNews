@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		DD970B752DB1474B007A5D19 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = DD970B742DB1474B007A5D19 /* Lottie */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		DDEEA8DB2DB1404E00A52EAA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DD970B752DB1474B007A5D19 /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +117,7 @@
 			);
 			name = OrbitNews;
 			packageProductDependencies = (
+				DD970B742DB1474B007A5D19 /* Lottie */,
 			);
 			productName = OrbitNews;
 			productReference = DDEEA8CD2DB1404D00A52EAA /* OrbitNews.app */;
@@ -195,6 +201,9 @@
 			);
 			mainGroup = DDEEA8C42DB1404D00A52EAA;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				DD970B732DB1474B007A5D19 /* XCRemoteSwiftPackageReference "lottie-spm" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = DDEEA8CE2DB1404D00A52EAA /* Products */;
 			projectDirPath = "";
@@ -558,6 +567,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		DD970B732DB1474B007A5D19 /* XCRemoteSwiftPackageReference "lottie-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-spm.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.5.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		DD970B742DB1474B007A5D19 /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DD970B732DB1474B007A5D19 /* XCRemoteSwiftPackageReference "lottie-spm" */;
+			productName = Lottie;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = DDEEA8C52DB1404D00A52EAA /* Project object */;
 }
