@@ -24,11 +24,11 @@ struct HomeView: View {
                 Group {
                     switch selectedTab {
                     case .home:
-                        ListView(title: "Noticias")
+                        ListView(title: NSLocalizedString("News", comment: ""))
                     case .search:
                         EmptyView()
                     case .profile:
-                        ListView(title: "Favoritos")
+                        ListView(title: NSLocalizedString("Favorites", comment: ""))
                     }
                 }
                 Spacer()
@@ -71,10 +71,10 @@ struct HomeView: View {
             VStack(spacing: 4) {
                 Image(systemName: icon)
                     .font(.system(size: 20, weight: .semibold))
-                    .foregroundColor(selectedTab == tab && !isSearching ? Color("TabBarActive") : Color("TabBarUnActive"))
+                    .foregroundColor(selectedTab == tab && !isSearching ? .tabBarActive : .tabBarUnActive)
                 Text(title)
                     .font(.caption)
-                    .foregroundColor(selectedTab == tab && !isSearching ? Color("TabBarActive") : Color("TabBarUnActive"))
+                    .foregroundColor(selectedTab == tab && !isSearching ? .tabBarActive : .tabBarUnActive)
             }
         }
     }
@@ -89,7 +89,7 @@ struct HomeView: View {
                 Image(systemName: "magnifyingglass")
                     .font(.system(size: 20, weight: .semibold))
                     .foregroundColor(isSearching ? .tabBarActive : .tabBarUnActive)
-                Text("Buscar")
+                Text(NSLocalizedString("Search", comment: ""))
                     .font(.caption)
                     .foregroundColor(isSearching ? .tabBarActive : .tabBarUnActive)
             }

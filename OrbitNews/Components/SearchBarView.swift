@@ -16,7 +16,7 @@ struct SearchBarView: View {
 
     var body: some View {
         HStack {
-            TextField("Buscar...", text: $searchText)
+            TextField(NSLocalizedString("Search", comment: "") + "...", text: $searchText)
                 .padding(10)
                 .background(Color(.systemGray6))
                 .cornerRadius(8)
@@ -26,7 +26,7 @@ struct SearchBarView: View {
                 }
 
             if let onCancel = onCancel {
-                Button("Cancelar") {
+                Button(NSLocalizedString("Cancel", comment: "")) {
                     onCancel()
                     isFocused = false
                 }
