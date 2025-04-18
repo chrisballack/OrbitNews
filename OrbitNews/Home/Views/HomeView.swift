@@ -13,6 +13,7 @@ struct HomeView: View {
     @State private var isSearching: Bool = false
     @State private var searchText: String = ""
     @FocusState private var isSearchFieldFocused: Bool
+    @ObservedObject var viewModel: ArticlesViewModel
     
     enum Tab {
         case home, search, profile
@@ -24,11 +25,13 @@ struct HomeView: View {
                 Group {
                     switch selectedTab {
                     case .home:
-                        ListView(title: NSLocalizedString("News", comment: ""))
+                        ListView(viewModel: viewModel, articles: viewModel.articles?.results ?? [], title: NSLocalizedString("News", comment: "")
+                        )
                     case .search:
                         EmptyView()
                     case .profile:
-                        ListView(title: NSLocalizedString("Favorites", comment: ""))
+                        ListView(viewModel: viewModel,articles: [], title: NSLocalizedString("Favorites", comment: ""))
+                        
                     }
                 }
                 Spacer()
@@ -60,6 +63,7 @@ struct HomeView: View {
             
             
         }
+        
     }
     
     @ViewBuilder
@@ -98,5 +102,8 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView(navigationPath: .constant(NavigationPath()))
+    HomeView(
+        navigationPath: .constant(NavigationPath()),
+        viewModel: ArticlesViewModel()
+    )
 }

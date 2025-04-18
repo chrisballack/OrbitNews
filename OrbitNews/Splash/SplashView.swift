@@ -8,13 +8,14 @@
 import Lottie
 import SwiftUI
 
-struct SwiftUIView: View {
+struct SplashView: View {
     @State private var path = NavigationPath()
+    @StateObject private var viewModel = ArticlesViewModel()
     
     var body: some View {
         NavigationStack(path: $path) {
             ZStack {
-                // Contenido de Lottie y otros elementos
+                
                 LottieView(animation: .named("Space"))
                     .animationDidFinish { _ in
                         path.append("Home")
@@ -24,12 +25,15 @@ struct SwiftUIView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .ignoresSafeArea()
             }
+            .task {
+                await viewModel.fetchArticles()
+            }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .ignoresSafeArea()
             .background(.splashBackgound)
             .navigationDestination(for: String.self) { destination in
                 if destination == "Home" {
-                    HomeView(navigationPath: $path)
+                    HomeView(navigationPath: $path, viewModel: viewModel)
                         .navigationBarBackButtonHidden(true)
                 }
             }
@@ -38,5 +42,5 @@ struct SwiftUIView: View {
 }
 
 #Preview {
-    SwiftUIView()
+    SplashView()
 }
