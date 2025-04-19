@@ -7,6 +7,30 @@
 
 import SwiftUI
 
+/// A view that represents the main interface of the application, including navigation between tabs and search functionality.
+///
+/// - Parameters:
+///   - navigationPath: A binding to a `NavigationPath` object that manages the app's navigation stack.
+///   - viewModel: An observed object of type `ArticlesViewModel` that provides data for the "News" tab.
+///   - sqlManager: An observed object of type `SQLManager` that manages database operations for favorites.
+///
+/// This view consists of three main tabs: "Home", "Search", and "Favorites". The currently selected tab is determined by the `selectedTab` state variable.
+/// When the "Search" tab is active, a search bar is displayed, allowing users to input search queries. The `isSearching` state variable controls the visibility of the search bar.
+///
+/// - Important: Ensure that the `ArticlesViewModel` and `SQLManager` classes are properly implemented and initialized before using this view.
+///              Additionally, the `ListView` component should be defined elsewhere in the project.
+///
+/// - Note: The `Tab` enum defines the possible tabs in the view: `.home`, `.search`, and `.favorites`.
+///
+/// Example usage:
+///
+/// ```swift
+/// HomeView(
+///     navigationPath: .constant(NavigationPath()),
+///     viewModel: ArticlesViewModel(),
+///     sqlManager: SQLManager()
+/// )
+/// ```
 struct HomeView: View {
     @Binding var navigationPath: NavigationPath
     @State private var selectedTab: Tab = .home

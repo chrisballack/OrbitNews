@@ -7,6 +7,29 @@
 
 import SwiftUI
 
+/// A view that displays a single article item in a list format.
+///
+/// - Parameters:
+///   - article: An optional `ResultsArticles` object representing the article to display.
+///   - onTap: A closure invoked when the user taps on the article item. It receives the tapped article as a parameter.
+///
+/// This view presents the article's image, title, author, publication date, and source in a compact horizontal layout.
+/// The image is loaded asynchronously using `AsyncImageLoading`, and tapping on any part of the view triggers the `onTap` action.
+/// Additionally, a share button is displayed if the article contains a valid URL.
+///
+/// - Important: Ensure that the `ResultsArticles` model is properly defined and contains the necessary properties (e.g., `image_url`, `title`, `authors`, etc.).
+///              Also, ensure that `AsyncImageLoading` is implemented correctly to handle asynchronous image loading.
+///
+/// Example usage:
+///
+/// ```swift
+/// ListItemView(
+///     article: someArticle,
+///     onTap: { article in
+///         print("Tapped article: \(article?.title ?? "Unknown")")
+///     }
+/// )
+/// ```
 struct ListItemView: View {
     
     let article: ResultsArticles?

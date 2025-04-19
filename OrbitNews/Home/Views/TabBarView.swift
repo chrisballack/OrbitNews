@@ -7,6 +7,35 @@
 
 import SwiftUI
 
+/// A custom tab bar view that provides navigation between different sections of the app.
+///
+/// - Parameters:
+///   - selectedTab: The currently selected tab in the tab bar.
+///   - isSearching: A Boolean value indicating whether the search mode is active.
+///   - onTabSelect: A closure invoked when a tab is selected. It receives the selected tab as a parameter.
+///   - onSearchTap: A closure invoked when the search button is tapped.
+///
+/// This view consists of three main components: a "News" tab, a search button, and a "Favorites" tab.
+/// The appearance of each component dynamically changes based on the `selectedTab` and `isSearching` states.
+/// Active tabs or buttons are highlighted with the `.tabBarActive` color, while inactive ones use `.tabBarUnActive`.
+///
+/// - Note: Ensure that the `HomeView.Tab` enum and the color constants `.tabBarActive` and `.tabBarUnActive`
+///         are properly defined elsewhere in the project.
+///
+/// Example usage:
+///
+/// ```swift
+/// TabBarView(
+///     selectedTab: .home,
+///     isSearching: false,
+///     onTabSelect: { tab in
+///         print("Selected tab: \(tab)")
+///     },
+///     onSearchTap: {
+///         print("Search button tapped")
+///     }
+/// )
+/// ```
 struct TabBarView: View {
     let selectedTab: HomeView.Tab
     let isSearching: Bool

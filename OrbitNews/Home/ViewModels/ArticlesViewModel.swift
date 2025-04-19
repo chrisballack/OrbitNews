@@ -8,7 +8,31 @@
 import Foundation
 import Combine
 
-
+/// A view model responsible for managing and fetching articles from a remote API.
+///
+/// - Note: This class conforms to `ObservableObject` and is designed to be used with SwiftUI views.
+///         It uses `@Published` properties to notify the UI of changes in the data, loading state, or error messages.
+///
+/// - Properties:
+///   - articles: The fetched articles data, represented as an optional `ArticlesModel`.
+///   - isLoading: A Boolean value indicating whether a network request is currently in progress.
+///   - errorMessage: An optional string containing an error message if a network or decoding error occurs.
+///
+/// This view model provides two main methods for fetching articles:
+/// - `fetchArticles(limit:url:)`: Fetches a specified number of articles from the API, sorted by publication date in descending order.
+/// - `loadMoreArticles()`: Loads additional articles from the API, appending them to the existing list.
+///
+/// - Important: Ensure that the `ArticlesModel` and related data models are properly defined and conform to `Decodable`.
+///              Additionally, the API endpoint should be valid and accessible.
+///
+/// Example usage:
+///
+/// ```swift
+/// let viewModel = ArticlesViewModel()
+/// Task {
+///     await viewModel.fetchArticles(limit: 10)
+/// }
+/// ```
 @MainActor
 class ArticlesViewModel: ObservableObject {
     @Published var articles: ArticlesModel? = nil

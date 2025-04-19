@@ -7,6 +7,32 @@
 
 import SwiftUI
 
+/// A view that displays the detailed content of an article, including a web view for the article's URL, and provides actions for sharing and favoriting.
+///
+/// - Parameters:
+///   - article: An optional `ResultsArticles` object representing the article to display. If `nil`, a placeholder message is shown.
+///   - onDonePress: A closure invoked when the user taps the "Done" button to dismiss the view.
+///   - onFavoritePress: A closure invoked when the user taps the favorite button to toggle the article's favorite status.
+///
+/// This view embeds a `WebView` to display the article's content from its URL. It also includes toolbar buttons for sharing the article,
+/// toggling its favorite status, and dismissing the view. The favorite status is visually represented by a filled or outlined heart icon.
+///
+/// - Important: Ensure that the `ResultsArticles` model contains the necessary properties (e.g., `url`, `isFavorite`) and that the `WebView`
+///              component is implemented correctly to handle web content. Additionally, ensure that the `ShareLink` feature is supported in your environment.
+///
+/// Example usage:
+///
+/// ```swift
+/// ArticleDetailView(
+///     article: someArticle,
+///     onDonePress: {
+///         print("User dismissed the article detail view")
+///     },
+///     onFavoritePress: {
+///         print("User toggled the favorite status")
+///     }
+/// )
+/// ```
 struct ArticleDetailView: View {
     
     let article: ResultsArticles?
