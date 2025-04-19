@@ -138,19 +138,22 @@ struct GridContentView: View {
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 16) {
                     ForEach(articles, id: \.id) { article in
-                        GridItemView(article: article)
-                            .id(article.id)
-                            .detectVisibility(id: article.id ?? 0)
-                            .onAppear {
-                                
-                                if article.id == articles.last?.id ||
-                                    articles.firstIndex(where: { $0.id == article.id }) ?? 0 > articles.count - 4 {
-                                    onLoadMore()
-                                }
-                            }.onTapGesture {
-                                
+                        GridItemView(article: article , onTap: { article in
+                            if let article = article{
                                 onArticleTap(article)
                             }
+                            
+                        })
+                        .id(article.id)
+                        .detectVisibility(id: article.id ?? 0)
+                        .onAppear {
+                            
+                            if article.id == articles.last?.id ||
+                                articles.firstIndex(where: { $0.id == article.id }) ?? 0 > articles.count - 4 {
+                                onLoadMore()
+                            }
+                        }
+                        
                     }
                 }
                 .padding()
@@ -186,20 +189,23 @@ struct ListContentView: View {
         ScrollViewReader { proxy in
             List {
                 ForEach(articles, id: \.id) { article in
-                    ListItemView(article: article)
-                        .padding(.vertical, 4)
-                        .id(article.id)
-                        .detectVisibility(id: article.id ?? 0)
-                        .onAppear {
-                            
-                            if article.id == articles.last?.id ||
-                                articles.firstIndex(where: { $0.id == article.id }) ?? 0 > articles.count - 4 {
-                                onLoadMore()
-                            }
-                        }.onTapGesture {
-                            
+                    ListItemView(article: article, onTap: { article in
+                        if let article = article{
                             onArticleTap(article)
                         }
+                        
+                    })
+                    .padding(.vertical, 4)
+                    .id(article.id)
+                    .detectVisibility(id: article.id ?? 0)
+                    .onAppear {
+                        
+                        if article.id == articles.last?.id ||
+                            articles.firstIndex(where: { $0.id == article.id }) ?? 0 > articles.count - 4 {
+                            onLoadMore()
+                        }
+                    }
+                    
                 }
             }
             .listStyle(.plain)
