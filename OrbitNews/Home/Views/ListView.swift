@@ -111,6 +111,7 @@ struct ListView: View {
     let title: String
     
     
+    
     @State private var selectedArticle: ResultsArticles?
     
     var body: some View {
@@ -176,7 +177,17 @@ struct ListView: View {
                 }
                 .refreshable {
                     Task {
-                        await viewModel.fetchArticles(limit: 10)
+                        
+                        if viewModel.searchQuery != "" {
+                            
+                            await viewModel.searchArticles()
+                            
+                        }else{
+                            
+                            await viewModel.fetchArticles(limit: 10)
+                            
+                        }
+                        
                     }
                 }
                 .sheet(item: $selectedArticle) { Data in

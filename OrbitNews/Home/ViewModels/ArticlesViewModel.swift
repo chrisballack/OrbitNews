@@ -38,15 +38,33 @@ class ArticlesViewModel: ObservableObject {
     @Published var articles: ArticlesModel? = nil
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
+    @Published var searchQuery: String = ""
     
-    func fetchArticles(limit: Int = 5, url: String = "https://api.spaceflightnewsapi.net/v4/articles") async {
-        isLoading = true
+    private let baseURL = "https://api.spaceflightnewsapi.net/v4/articles"
+    
+    func fetchArticles(limit: Int = 5, search: String? = nil , withLoading: Bool = false) async {
+        isLoading = withLoading
         errorMessage = nil
         
-        let urlString = url + "?_limit=\(limit)&_sort=publishedAt:desc"
+        guard var components = URLComponents(string: baseURL) else {
+            errorMessage = "Invalid base URL"
+            isLoading = false
+            return
+        }
         
-        guard let url = URL(string: urlString) else {
-            errorMessage = "Invalid URL"
+        var queryItems = [
+            URLQueryItem(name: "_limit", value: "\(limit)"),
+            URLQueryItem(name: "_sort", value: "publishedAt:desc")
+        ]
+        
+        if let search = search, !search.trimmingCharacters(in: .whitespaces).isEmpty {
+            queryItems.append(URLQueryItem(name: "search", value: search))
+        }
+        
+        components.queryItems = queryItems
+        
+        guard let url = components.url else {
+            errorMessage = "Failed to construct URL"
             isLoading = false
             return
         }
@@ -63,18 +81,12 @@ class ArticlesViewModel: ObservableObject {
     }
     
     func loadMoreArticles() async {
-        guard !isLoading, let nextUrl = articles?.next else {
+        guard !isLoading, let nextUrl = articles?.next, let url = URL(string: nextUrl) else {
             return
         }
         
-        isLoading = true
+        
         errorMessage = nil
-        
-        guard let url = URL(string: nextUrl) else {
-            errorMessage = "Invalid URL"
-            isLoading = false
-            return
-        }
         
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
@@ -88,11 +100,12 @@ class ArticlesViewModel: ObservableObject {
                 articles = newArticlesBatch
             }
         } catch {
-            
             errorMessage = error.localizedDescription
-            
         }
         
-        isLoading = false
+    }
+    
+    func searchArticles( withLoading: Bool = false) async {
+        await fetchArticles(limit: articles?.results?.count ?? 5, search: searchQuery,withLoading:withLoading)
     }
 }

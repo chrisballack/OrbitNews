@@ -50,14 +50,23 @@ struct HomeView: View {
                 Group {
                     switch selectedTab {
                     case .home:
-                        ListView(viewModel: viewModel, sqlManager: sqlManager, isFavorite: false, articles: viewModel.articles?.results ?? [], title: NSLocalizedString("News", comment: "")
-                        )
+                        if (viewModel.isLoading){
+                            LoadingView()
+                        }else{
+                            ListView(viewModel: viewModel, sqlManager: sqlManager, isFavorite: false, articles: viewModel.articles?.results ?? [], title: NSLocalizedString("News", comment: "")
+                            )
+                        }
                     case .search:
                         EmptyView()
                     case .favorites:
-                        ListView(viewModel: viewModel, sqlManager: sqlManager,isFavorite: true,articles: sqlManager.favorites, title: NSLocalizedString("Favorites", comment: "")).onAppear {
-                            sqlManager.fetchAllFavorites()
+                        if (viewModel.isLoading){
+                            LoadingView()
+                        }else{
+                            ListView(viewModel: viewModel, sqlManager: sqlManager,isFavorite: true,articles: sqlManager.favorites, title: NSLocalizedString("Favorites", comment: "")).onAppear {
+                                sqlManager.fetchAllFavorites()
+                            }
                         }
+                        
                         
                     }
                 }
@@ -66,12 +75,30 @@ struct HomeView: View {
                     SearchBarView(
                         searchText: $searchText,
                         onSubmit: {
-                            print("buscare ", searchText )
+                            
+                            if (selectedTab == .home){
+                                viewModel.searchQuery = searchText
+                                Task {
+                                    await viewModel.searchArticles(withLoading: true)
+                                }
+                            }else{
+                                
+                                if (searchText == ""){
+                                    sqlManager.fetchAllFavorites()
+                                }else{
+                                    
+                                    sqlManager.searchFavorites(by: searchText)
+                                    
+                                }
+                                    
+                                
+                                
+                            }
+                            
                             isSearching = false
                         },
                         onCancel: {
                             isSearching = false
-                            searchText = ""
                         }
                     )
                     .transition(.move(edge: .top).combined(with: .opacity))

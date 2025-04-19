@@ -25,6 +25,7 @@ class SQLManager: ObservableObject {
     
     var db: OpaquePointer?
     @Published var favorites: [ResultsArticles] = []
+    
     /// Initializes the `SQLManager` and opens the database connection.
     ///
     /// This initializer sets up the `SQLManager` instance by calling the `openDatabase()` method,
@@ -460,6 +461,78 @@ class SQLManager: ObservableObject {
         
         sqlite3_finalize(statement)
         return nil
+    }
+    
+    
+    /// Searches for favorite articles in the database based on a keyword and updates the `favorites` property with the results.
+    ///
+    /// - Parameter keyword: A string representing the search term to match against article titles.
+    ///
+    /// This function performs a SQL query to search for articles in the `Articles` table where the title contains the provided keyword.
+    /// The search is case-insensitive and supports partial matches using the SQL `LIKE` operator with wildcard characters (`%`).
+    /// Each matching article is mapped to a `ResultsArticles` object, marked as a favorite (`isFavorite = true`), and stored in the `favorites` property.
+    ///
+    /// - Important: Ensure that the database connection (`db`) is properly initialized before calling this function.
+    ///              Additionally, the `safeColumnText` helper function must be implemented to safely retrieve text values from the database.
+    ///              The `favorites` property must be defined elsewhere in the class or struct to store the search results.
+    ///
+    /// Example usage:
+    ///
+    /// ```swift
+    /// searchFavorites(by: "space")
+    /// print("Found \(favorites.count) articles matching 'space'")
+    /// ```
+    func searchFavorites(by keyword: String) {
+        let queryStatementString = "SELECT * FROM Articles WHERE title LIKE ?;"
+        var queryStatement: OpaquePointer?
+        var articles: [ResultsArticles] = []
+        
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            
+            let searchParam = "%\(keyword)%"
+            sqlite3_bind_text(queryStatement, 1, (searchParam as NSString).utf8String, -1, nil)
+            
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let id = Int(sqlite3_column_int(queryStatement, 0))
+                let title = safeColumnText(statement: queryStatement, column: 1)
+                let url = safeColumnText(statement: queryStatement, column: 2)
+                let imageUrl = safeColumnText(statement: queryStatement, column: 3)
+                let newsSite = safeColumnText(statement: queryStatement, column: 4)
+                let summary = safeColumnText(statement: queryStatement, column: 5)
+                let publishedAtStr = safeColumnText(statement: queryStatement, column: 6)
+                let updatedAt = safeColumnText(statement: queryStatement, column: 7)
+                let featured = sqlite3_column_int(queryStatement, 8) == 1
+                
+                var publishedAt: Date? = nil
+                if !publishedAtStr.isEmpty {
+                    let formatter = ISO8601DateFormatter()
+                    publishedAt = formatter.date(from: publishedAtStr)
+                }
+                
+                let article = ResultsArticles(
+                    id: id,
+                    title: title,
+                    authors: nil,
+                    url: url,
+                    image_url: imageUrl,
+                    news_site: newsSite,
+                    summary: summary,
+                    published_at: publishedAt,
+                    updated_at: updatedAt,
+                    featured: featured,
+                    launches: nil,
+                    events: nil,
+                    isFavorite: true
+                )
+                articles.append(article)
+            }
+        } else {
+            let errorMessage = String(cString: sqlite3_errmsg(db))
+            print("Search statement could not be prepared. Error: \(errorMessage)")
+        }
+        
+        sqlite3_finalize(queryStatement)
+        favorites = articles
     }
     
     /// Safely retrieves and sanitizes text from a column in an SQLite prepared statement.

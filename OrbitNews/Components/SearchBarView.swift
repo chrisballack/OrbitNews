@@ -32,6 +32,8 @@ import SwiftUI
 ///     }
 /// )
 /// ```
+import SwiftUI
+
 struct SearchBarView: View {
     @Binding var searchText: String
     var onSubmit: () -> Void
@@ -41,14 +43,27 @@ struct SearchBarView: View {
 
     var body: some View {
         HStack {
-            TextField(NSLocalizedString("Search", comment: "") + "...", text: $searchText)
-                .padding(10)
-                .background(Color(.systemGray6))
-                .cornerRadius(8)
-                .focused($isFocused)
-                .onSubmit {
-                    onSubmit()
+            ZStack(alignment: .trailing) {
+                TextField(NSLocalizedString("Search", comment: "") + "...", text: $searchText)
+                    .padding(10)
+                    .background(Color(.systemGray6))
+                    .cornerRadius(8)
+                    .focused($isFocused)
+                    .onSubmit {
+                        onSubmit()
+                    }
+
+                if !searchText.isEmpty {
+                    Button(action: {
+                        searchText = ""
+                    }) {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundColor(.gray)
+                            .padding(.trailing, 10)
+                    }
+                    .transition(.opacity)
                 }
+            }
 
             if let onCancel = onCancel {
                 Button(NSLocalizedString("Cancel", comment: "")) {
@@ -64,6 +79,7 @@ struct SearchBarView: View {
         }
     }
 }
+
 
 #Preview {
     SearchBarPreviewContainer()

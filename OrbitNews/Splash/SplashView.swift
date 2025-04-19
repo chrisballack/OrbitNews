@@ -31,19 +31,15 @@ import SwiftUI
 /// }
 /// ```
 struct SplashView: View {
-    /// The navigation path used to manage transitions between views.
+    
     @State private var path = NavigationPath()
-    
-    /// The view model responsible for fetching and managing articles.
     @StateObject private var viewModel = ArticlesViewModel()
-    
-    /// The manager class responsible for handling SQLite database operations.
     private let sqlManager = SQLManager()
     
     var body: some View {
         NavigationStack(path: $path) {
             ZStack {
-                // Displays the Lottie animation and triggers navigation upon completion.
+                
                 LottieView(animation: .named("Space"))
                     .animationDidFinish { _ in
                         path.append("Home")
@@ -53,14 +49,13 @@ struct SplashView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .ignoresSafeArea()
             }
-            // Fetches articles asynchronously when the view appears.
+            
             .task {
-                await viewModel.fetchArticles()
+                await viewModel.fetchArticles(withLoading:true)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .ignoresSafeArea()
             .background(.splashBackgound)
-            // Handles navigation to the home screen.
             .navigationDestination(for: String.self) { destination in
                 if destination == "Home" {
                     HomeView(navigationPath: $path, viewModel: viewModel, sqlManager: sqlManager)
