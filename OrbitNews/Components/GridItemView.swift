@@ -28,10 +28,21 @@ struct GridItemView: View {
                         .lineLimit(3)
                     
                     if let autors = article.authors, autors.indices.contains(0) {
+                        HStack(){
+                            
+                            Text("\(autors[0].name ?? "") • \(article.formattedPublishedAt ?? "")")
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                            Spacer()
+                            ShareLink(item: article.url ?? "") {
+                                Image(systemName: "square.and.arrow.up")
+                                    .frame(width: 30, height: 30)
+                                    .foregroundColor(.gray)
+                            }
+                            
+                            
+                        }
                         
-                        Text("\(autors[0].name ?? "") • \(article.formattedPublishedAt ?? "")")
-                            .font(.caption)
-                            .foregroundColor(.gray)
                     }
                     
                 }

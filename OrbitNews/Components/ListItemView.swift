@@ -31,9 +31,22 @@ struct ListItemView: View {
                     
                     if let autors = article.authors, autors.indices.contains(0) {
                         
-                        Text("\(autors[0].name ?? "") • \(article.formattedPublishedAt ?? "")")
-                            .font(.caption)
-                            .foregroundColor(.gray)
+                        HStack(){
+                            
+                            Text("\(autors[0].name ?? "") • \(article.formattedPublishedAt ?? "")")
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                            if let url = article.url {
+                                Spacer()
+                                ShareLink(item: url) {
+                                    Image(systemName: "square.and.arrow.up")
+                                        .frame(width: 30, height: 30)
+                                        .foregroundColor(.gray)
+                                }
+                            }
+                            
+                            
+                        }
                     }
                 }
                 

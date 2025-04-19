@@ -48,10 +48,18 @@ struct ListView: View {
     @State private var isGridView = false
     @State private var scrollTarget: Int?
     @State private var visibleID: Int?
+    
+    @State private var isShowingArticleDetail = false
+    
     let articles: [ResultsArticles]
     let columns = [GridItem(.flexible()), GridItem(.flexible())]
     let title: String
     
+    struct SelectedURL: Identifiable {
+        let id = UUID()
+        let url: String
+    }
+    @State private var selectedURL: SelectedURL?
     
     var body: some View {
         NavigationView {
@@ -66,6 +74,10 @@ struct ListView: View {
                                     await viewModel.loadMoreArticles()
                                 }
                             }
+                        } onArticleTap: { article in
+                            if let urlString = article.url, !urlString.isEmpty, URL(string: urlString) != nil {
+                                selectedURL = SelectedURL(url: urlString)
+                            }
                         }
                 } else {
                     ListContentView(
@@ -76,6 +88,10 @@ struct ListView: View {
                                 Task {
                                     await viewModel.loadMoreArticles()
                                 }
+                            }
+                        } onArticleTap: { article in
+                            if let urlString = article.url, !urlString.isEmpty, URL(string: urlString) != nil {
+                                selectedURL = SelectedURL(url: urlString)
                             }
                         }
                 }
@@ -88,12 +104,21 @@ struct ListView: View {
             }
             .onChange(of: isGridView) { newValue in
                 if let visibleID = visibleID {
-                    scrollTarget = articles.first { $0.id == visibleID }?.id
+                    scrollTarget = visibleID
                 }
-            }.refreshable {
+            }
+            .refreshable {
                 Task {
                     await viewModel.fetchArticles(limit: 10)
                 }
+            }
+            .sheet(item: $selectedURL) { selectedURL in
+                ArticleDetailView(
+                    article_url: selectedURL.url,
+                    onDonePress: {
+                        self.selectedURL = nil
+                    }
+                )
             }
         }
     }
@@ -104,6 +129,7 @@ struct GridContentView: View {
     @Binding var scrollTarget: Int?
     @Binding var visibleID: Int?
     var onLoadMore: () -> Void
+    var onArticleTap: (ResultsArticles) -> Void
     
     let columns = [GridItem(.flexible()), GridItem(.flexible())]
     
@@ -121,6 +147,9 @@ struct GridContentView: View {
                                     articles.firstIndex(where: { $0.id == article.id }) ?? 0 > articles.count - 4 {
                                     onLoadMore()
                                 }
+                            }.onTapGesture {
+                                
+                                onArticleTap(article)
                             }
                     }
                 }
@@ -151,6 +180,7 @@ struct ListContentView: View {
     @Binding var scrollTarget: Int?
     @Binding var visibleID: Int?
     var onLoadMore: () -> Void
+    var onArticleTap: (ResultsArticles) -> Void
     
     var body: some View {
         ScrollViewReader { proxy in
@@ -166,6 +196,9 @@ struct ListContentView: View {
                                 articles.firstIndex(where: { $0.id == article.id }) ?? 0 > articles.count - 4 {
                                 onLoadMore()
                             }
+                        }.onTapGesture {
+                            
+                            onArticleTap(article)
                         }
                 }
             }
