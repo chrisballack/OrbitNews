@@ -39,6 +39,7 @@ class SQLManager: ObservableObject {
     /// ```
     init() {
         openDatabase()
+        
     }
     
     /// Opens the SQLite database from the app's document directory and creates the `Favorites` table if it doesn't already exist.
@@ -104,6 +105,7 @@ class SQLManager: ObservableObject {
         if sqlite3_prepare_v2(db, createTableString, -1, &createTableStatement, nil) == SQLITE_OK {
             if sqlite3_step(createTableStatement) == SQLITE_DONE {
                 print("Favorites table created.")
+                self.fetchAllFavorites()
             } else {
                 print("Favorites table could not be created.")
             }

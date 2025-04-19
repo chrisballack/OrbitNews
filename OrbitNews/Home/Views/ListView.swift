@@ -100,9 +100,9 @@ extension View {
 /// ```
 struct ListView: View {
     @ObservedObject var viewModel: ArticlesViewModel
-    @State private var isGridView = false
-    @State private var scrollTarget: Int?
-    @State private var visibleID: Int?
+    @Binding var isGridView: Bool
+    @Binding var scrollTarget: Int?
+    @Binding var visibleID: Int?
     @State private var isShowingArticleDetail = false
     var sqlManager: SQLManager
     let isFavorite: Bool
@@ -357,5 +357,5 @@ struct ToggleGridViewButton: View {
 }
 
 #Preview {
-    ListView(viewModel: ArticlesViewModel(), sqlManager: SQLManager(), isFavorite: false, articles: [], title: "Noticias")
+    ListView(viewModel: ArticlesViewModel(),isGridView: .constant(false), scrollTarget: .constant(0),visibleID: .constant(0), sqlManager: SQLManager(), isFavorite: false, articles: [], title: "Noticias")
 }

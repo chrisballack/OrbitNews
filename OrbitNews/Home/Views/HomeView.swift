@@ -36,9 +36,16 @@ struct HomeView: View {
     @State private var selectedTab: Tab = .home
     @State private var isSearching: Bool = false
     @State private var searchText: String = ""
+    @State private var isGridViewHome = false
+    @State private var isGridViewFavorites = false
     @FocusState private var isSearchFieldFocused: Bool
     @ObservedObject var viewModel: ArticlesViewModel
     @ObservedObject var sqlManager: SQLManager
+    
+    @State private var scrollTargetHome: Int?
+    @State private var visibleIDHome: Int?
+    @State private var scrollTargetFavorites: Int?
+    @State private var visibleIDFavorites: Int?
     
     enum Tab {
         case home, search, favorites
@@ -53,7 +60,7 @@ struct HomeView: View {
                         if (viewModel.isLoading){
                             LoadingView()
                         }else{
-                            ListView(viewModel: viewModel, sqlManager: sqlManager, isFavorite: false, articles: viewModel.articles?.results ?? [], title: NSLocalizedString("News", comment: "")
+                            ListView(viewModel: viewModel,isGridView: $isGridViewHome, scrollTarget:$scrollTargetHome, visibleID:$visibleIDHome,sqlManager: sqlManager, isFavorite: false, articles: viewModel.articles?.results ?? [], title: NSLocalizedString("News", comment: "")
                             )
                         }
                     case .search:
@@ -62,9 +69,7 @@ struct HomeView: View {
                         if (viewModel.isLoading){
                             LoadingView()
                         }else{
-                            ListView(viewModel: viewModel, sqlManager: sqlManager,isFavorite: true,articles: sqlManager.favorites, title: NSLocalizedString("Favorites", comment: "")).onAppear {
-                                sqlManager.fetchAllFavorites()
-                            }
+                            ListView(viewModel: viewModel,isGridView: $isGridViewFavorites,scrollTarget: $scrollTargetFavorites, visibleID: $visibleIDFavorites, sqlManager: sqlManager,isFavorite: true,articles: sqlManager.favorites, title: NSLocalizedString("Favorites", comment: ""))
                         }
                         
                         
@@ -90,7 +95,7 @@ struct HomeView: View {
                                     sqlManager.searchFavorites(by: searchText)
                                     
                                 }
-                                    
+                                
                                 
                                 
                             }
