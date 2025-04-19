@@ -2,7 +2,7 @@
 //  SwiftUIView.swift
 //  OrbitNews
 //
-//  Created by Maria Fernanda Paz Rodriguez on 17/04/25.
+//  Created by Christians bonilla on 17/04/25.
 //
 
 import Lottie
@@ -11,6 +11,7 @@ import SwiftUI
 struct SplashView: View {
     @State private var path = NavigationPath()
     @StateObject private var viewModel = ArticlesViewModel()
+    private let sqlManager = SQLManager()
     
     var body: some View {
         NavigationStack(path: $path) {
@@ -33,8 +34,8 @@ struct SplashView: View {
             .background(.splashBackgound)
             .navigationDestination(for: String.self) { destination in
                 if destination == "Home" {
-                    HomeView(navigationPath: $path, viewModel: viewModel)
-                        .navigationBarBackButtonHidden(true)
+                    HomeView(navigationPath: $path, viewModel: viewModel, sqlManager: sqlManager)
+                                            .navigationBarBackButtonHidden(true)
                 }
             }
         }

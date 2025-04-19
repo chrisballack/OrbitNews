@@ -2,7 +2,7 @@
 //  GridItemView.swift
 //  OrbitNews
 //
-//  Created by Maria Fernanda Paz Rodriguez on 17/04/25.
+//  Created by Christians bonilla on 17/04/25.
 //
 
 import SwiftUI
@@ -66,11 +66,15 @@ struct GridItemView: View {
         .background(Color(.systemBackground))
         .cornerRadius(8)
         .shadow(radius: 2)
+        .overlay(
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(Color.gray, lineWidth: 1)
+        )
     }
 }
 
 #Preview {
-    GridItemView( article: nil, onTap: {_ in 
+    GridItemView( article: nil, onTap: {_ in
         print("result")
     })
 }

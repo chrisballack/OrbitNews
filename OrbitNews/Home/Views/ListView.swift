@@ -2,7 +2,7 @@
 //  ListView.swift
 //  OrbitNews
 //
-//  Created by Maria Fernanda Paz Rodriguez on 17/04/25.
+//  Created by Christians bonilla on 17/04/25.
 //
 
 import SwiftUI
@@ -48,79 +48,101 @@ struct ListView: View {
     @State private var isGridView = false
     @State private var scrollTarget: Int?
     @State private var visibleID: Int?
-    
     @State private var isShowingArticleDetail = false
-    
+    var sqlManager: SQLManager
+    let isFavorite: Bool
     let articles: [ResultsArticles]
     let columns = [GridItem(.flexible()), GridItem(.flexible())]
     let title: String
     
-    struct SelectedURL: Identifiable {
-        let id = UUID()
-        let url: String
-    }
-    @State private var selectedURL: SelectedURL?
+    
+    @State private var selectedArticle: ResultsArticles?
     
     var body: some View {
-        NavigationView {
-            Group {
-                if isGridView {
-                    GridContentView(
-                        articles: articles,
-                        scrollTarget: $scrollTarget,
-                        visibleID: $visibleID) {
-                            if (!viewModel.isLoading){
-                                Task {
-                                    await viewModel.loadMoreArticles()
-                                }
-                            }
-                        } onArticleTap: { article in
-                            if let urlString = article.url, !urlString.isEmpty, URL(string: urlString) != nil {
-                                selectedURL = SelectedURL(url: urlString)
-                            }
-                        }
-                } else {
-                    ListContentView(
-                        articles: articles,
-                        scrollTarget: $scrollTarget,
-                        visibleID: $visibleID) {
-                            if (!viewModel.isLoading){
-                                Task {
-                                    await viewModel.loadMoreArticles()
-                                }
-                            }
-                        } onArticleTap: { article in
-                            if let urlString = article.url, !urlString.isEmpty, URL(string: urlString) != nil {
-                                selectedURL = SelectedURL(url: urlString)
-                            }
-                        }
-                }
-            }
-            .navigationTitle(title)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    ToggleGridViewButton(isGridView: $isGridView)
-                }
-            }
-            .onChange(of: isGridView) { newValue in
-                if let visibleID = visibleID {
-                    scrollTarget = visibleID
-                }
-            }
-            .refreshable {
-                Task {
+        if (articles.isEmpty){
+            
+            
+            EmptyNews(withImage: !isFavorite, withbutton: !isFavorite, Title: isFavorite ? NSLocalizedString("No favorites", comment: "")  : NSLocalizedString("No news available", comment: ""), onTapRetry:
+                        {
+                Task{
                     await viewModel.fetchArticles(limit: 10)
                 }
-            }
-            .sheet(item: $selectedURL) { selectedURL in
-                ArticleDetailView(
-                    article_url: selectedURL.url,
-                    onDonePress: {
-                        self.selectedURL = nil
+            })
+            
+            
+        }else{
+            
+            NavigationView {
+                Group {
+                    if isGridView {
+                        GridContentView(
+                            articles: articles,
+                            scrollTarget: $scrollTarget,
+                            visibleID: $visibleID) {
+                                if (!viewModel.isLoading){
+                                    Task {
+                                        await viewModel.loadMoreArticles()
+                                    }
+                                }
+                            } onArticleTap: { article in
+                                
+                                let isFavorite = sqlManager.fetchArticle(by: article.id)
+                                
+                                selectedArticle = isFavorite != nil ? isFavorite : article
+                                    
+                            }
+                    } else {
+                        
+                        ListContentView(
+                            articles: articles,
+                            scrollTarget: $scrollTarget,
+                            visibleID: $visibleID) {
+                                if (!viewModel.isLoading){
+                                    Task {
+                                        await viewModel.loadMoreArticles()
+                                    }
+                                }
+                            } onArticleTap: { article in
+                                let isFavorite = sqlManager.fetchArticle(by: article.id)
+                                selectedArticle = isFavorite != nil ? isFavorite : article
+                            }
                     }
-                )
+                }
+                .navigationTitle(title)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        ToggleGridViewButton(isGridView: $isGridView)
+                    }
+                }
+                .onChange(of: isGridView) { newValue in
+                    if let visibleID = visibleID {
+                        scrollTarget = visibleID
+                    }
+                }
+                .refreshable {
+                    Task {
+                        await viewModel.fetchArticles(limit: 10)
+                    }
+                }
+                .sheet(item: $selectedArticle) { Data in
+                   
+                    ArticleDetailView(article: Data) {
+                        selectedArticle = nil
+                    } onFavoritePress: {
+                        let exists = sqlManager.fetchArticle(by: Data.id)
+                        if exists != nil {
+                            sqlManager.deleteFavorite(by: Data.id)
+                        } else {
+                            sqlManager.insertFavorites(article: Data)
+                        }
+                        
+                    }
+                    
+                }
             }
+            
         }
+        
     }
 }
 
@@ -145,7 +167,7 @@ struct GridContentView: View {
                             
                         })
                         .id(article.id)
-                        .detectVisibility(id: article.id ?? 0)
+                        .detectVisibility(id: article.id)
                         .onAppear {
                             
                             if article.id == articles.last?.id ||
@@ -197,7 +219,7 @@ struct ListContentView: View {
                     })
                     .padding(.vertical, 4)
                     .id(article.id)
-                    .detectVisibility(id: article.id ?? 0)
+                    .detectVisibility(id: article.id)
                     .onAppear {
                         
                         if article.id == articles.last?.id ||
@@ -246,5 +268,5 @@ struct ToggleGridViewButton: View {
 // MARK: - Preview
 
 #Preview {
-    ListView(viewModel: ArticlesViewModel(), articles: [], title: "Noticias")
+    ListView(viewModel: ArticlesViewModel(), sqlManager: SQLManager(), isFavorite: false, articles: [], title: "Noticias")
 }

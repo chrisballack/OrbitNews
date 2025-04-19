@@ -2,7 +2,7 @@
 //  ArticlesViewModel.swift
 //  OrbitNews
 //
-//  Created by Maria Fernanda Paz Rodriguez on 18/04/25.
+//  Created by Christians bonilla on 18/04/25.
 //
 
 import Foundation

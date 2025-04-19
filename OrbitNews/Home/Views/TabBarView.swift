@@ -2,7 +2,7 @@
 //  TabBarView.swift
 //  OrbitNews
 //
-//  Created by Maria Fernanda Paz Rodriguez on 17/04/25.
+//  Created by Christians bonilla on 17/04/25.
 //
 
 import SwiftUI
@@ -19,7 +19,7 @@ struct TabBarView: View {
             Spacer()
             searchButton()
             Spacer()
-            tabBarItem(icon: "suit.heart", title: NSLocalizedString("Favorites", comment: ""), tab: .profile)
+            tabBarItem(icon: "suit.heart", title: NSLocalizedString("Favorites", comment: ""), tab: .favorites)
         }
         .padding(.horizontal, 50)
         .padding(.top, 10)

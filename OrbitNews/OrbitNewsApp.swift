@@ -2,7 +2,7 @@
 //  OrbitNewsApp.swift
 //  OrbitNews
 //
-//  Created by Maria Fernanda Paz Rodriguez on 17/04/25.
+//  Created by Christians bonilla on 17/04/25.
 //
 
 import SwiftUI

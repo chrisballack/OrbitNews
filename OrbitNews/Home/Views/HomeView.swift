@@ -2,7 +2,7 @@
 //  HomeView.swift
 //  OrbitNews
 //
-//  Created by Maria Fernanda Paz Rodriguez on 17/04/25.
+//  Created by Christians bonilla on 17/04/25.
 //
 
 import SwiftUI
@@ -14,9 +14,10 @@ struct HomeView: View {
     @State private var searchText: String = ""
     @FocusState private var isSearchFieldFocused: Bool
     @ObservedObject var viewModel: ArticlesViewModel
+    @ObservedObject var sqlManager: SQLManager
     
     enum Tab {
-        case home, search, profile
+        case home, search, favorites
     }
     
     var body: some View {
@@ -25,16 +26,17 @@ struct HomeView: View {
                 Group {
                     switch selectedTab {
                     case .home:
-                        ListView(viewModel: viewModel, articles: viewModel.articles?.results ?? [], title: NSLocalizedString("News", comment: "")
+                        ListView(viewModel: viewModel, sqlManager: sqlManager, isFavorite: false, articles: viewModel.articles?.results ?? [], title: NSLocalizedString("News", comment: "")
                         )
                     case .search:
                         EmptyView()
-                    case .profile:
-                        ListView(viewModel: viewModel,articles: [], title: NSLocalizedString("Favorites", comment: ""))
+                    case .favorites:
+                        ListView(viewModel: viewModel, sqlManager: sqlManager,isFavorite: true,articles: sqlManager.favorites, title: NSLocalizedString("Favorites", comment: "")).onAppear {
+                            sqlManager.fetchAllFavorites()
+                        }
                         
                     }
                 }
-                Spacer()
                 
                 if isSearching {
                     SearchBarView(
@@ -104,6 +106,6 @@ struct HomeView: View {
 #Preview {
     HomeView(
         navigationPath: .constant(NavigationPath()),
-        viewModel: ArticlesViewModel()
+        viewModel: ArticlesViewModel(), sqlManager: SQLManager()
     )
 }

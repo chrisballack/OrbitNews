@@ -2,7 +2,7 @@
 //  webView.swift
 //  OrbitNews
 //
-//  Created by Maria Fernanda Paz Rodriguez on 18/04/25.
+//  Created by Christians bonilla on 18/04/25.
 //
 
 import SwiftUI
@@ -27,6 +27,6 @@ struct WebView: UIViewRepresentable {
     }
 
     class Coordinator: NSObject, WKNavigationDelegate {
-        // Puedes manejar navegación, errores, etc.
+        
     }
 }

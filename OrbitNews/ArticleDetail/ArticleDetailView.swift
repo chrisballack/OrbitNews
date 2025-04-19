@@ -2,20 +2,30 @@
 //  ArticleDetailView.swift
 //  OrbitNews
 //
-//  Created by Maria Fernanda Paz Rodriguez on 18/04/25.
+//  Created by Christians bonilla on 18/04/25.
 //
 
 import SwiftUI
 
 struct ArticleDetailView: View {
     
-    let article_url: String
+    let article: ResultsArticles?
     var onDonePress: () -> Void
-
+    var onFavoritePress: () -> Void
+    @State private var isFavorite: Bool
+    
+    init(article: ResultsArticles?, onDonePress: @escaping () -> Void,onFavoritePress: @escaping () -> Void) {
+        
+        self.article = article ?? nil
+        self._isFavorite = State(initialValue: article?.isFavorite ?? false)
+        self.onDonePress = onDonePress
+        self.onFavoritePress = onFavoritePress
+    }
+    
     var body: some View {
         NavigationView {
             VStack {
-                if let url = URL(string: article_url) {
+                if let url = URL(string: article?.url ?? "") {
                     WebView(url: url)
                         .edgesIgnoringSafeArea(.all)
                 } else {
@@ -28,10 +38,31 @@ struct ArticleDetailView: View {
             
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Done") {
+                    HStack(spacing: 6) {
                         
-                        onDonePress()
+                        Button(action: {
+                            isFavorite.toggle()
+                            onFavoritePress()
+                        }) {
+                            Image(systemName: isFavorite ? "heart.fill" : "heart")
+                                .frame(width: 34, height: 34)
+                                .foregroundColor(isFavorite ? .red : .gray)
+                        }
+                        
+                        ShareLink(item: article?.url ?? "") {
+                            Image(systemName: "square.and.arrow.up")
+                                .frame(width: 34, height: 34)
+                                .foregroundColor(.blue)
+                        }
+                        
+                        Button(NSLocalizedString("Done", comment: "")) {
+                            
+                            onDonePress()
+                            
+                        }
+                        
                     }
+                    
                 }
             }
         }
@@ -41,7 +72,10 @@ struct ArticleDetailView: View {
 
 
 #Preview {
-    ArticleDetailView(article_url:"", onDonePress: {
-        print("")
+    ArticleDetailView(article:nil,
+                      onDonePress: {
+        print("onDonePress")
+    }, onFavoritePress: {
+        print("onFavoritePress")
     })
 }
