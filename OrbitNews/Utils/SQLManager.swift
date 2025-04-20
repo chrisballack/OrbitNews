@@ -96,7 +96,8 @@ class SQLManager: ObservableObject {
             summary TEXT,
             published_at TEXT,
             updated_at TEXT,
-            featured INTEGER
+            featured INTEGER, 
+            autors TEXT
         );
         """
         
@@ -151,8 +152,8 @@ class SQLManager: ObservableObject {
         let cleanArticle = sanitizeArticle(article)
         
         let insertStatementString = """
-                INSERT OR REPLACE INTO Articles (id, title, url, image_url, news_site, summary, published_at, updated_at, featured)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+                INSERT OR REPLACE INTO Articles (id, title, url, image_url, news_site, summary, published_at, updated_at, featured, autors)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
                 """
         
         var insertStatement: OpaquePointer?
@@ -190,6 +191,9 @@ class SQLManager: ObservableObject {
             
             let featuredValue = cleanArticle.featured == true ? 1 : 0
             sqlite3_bind_int(insertStatement, 9, Int32(featuredValue))
+            
+            let authors = cleanArticle.authors?.first
+            safeBindText(insertStatement, 10, authors?.name ?? "")
             
             let result = sqlite3_step(insertStatement)
             if result == SQLITE_DONE {
@@ -272,7 +276,7 @@ class SQLManager: ObservableObject {
             featured: article.featured,
             launches: article.launches,
             events: article.events,
-            isFavorite: article.isFavorite
+            isFavorite: article.isFavorite,
         )
     }
     
