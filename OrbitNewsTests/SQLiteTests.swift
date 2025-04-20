@@ -10,6 +10,8 @@ import Testing
 
 @Suite("SQLManager Tests")
 struct SQLManagerTests {
+    
+    
 
     @Test("Insert a favorite article")
     func testInsertFavorite() throws {
@@ -89,5 +91,34 @@ struct SQLManagerTests {
             ($0.title ?? "").contains("Swift")
         }))
 
+    }
+    
+    @Test("Fetch a favorite article by ID")
+    func testFetchArticleByID() throws {
+        let manager = SQLManager()
+        
+        let article = ResultsArticles(
+            id: 4,
+            title: "Fetch Test Article",
+            authors: [Authors(name: "chris", socials: Socials(x: "https://x.com/mercadolibre?lang=es", youtube: "https://www.youtube.com/user/mercadolibre", instagram: "https://www.instagram.com/mercadolibre.co/?hl=es", linkedin: "https://www.linkedin.com/company/mercadolibre/?originalSubdomain=co", mastodon: "", bluesky: ""))],
+            url: "https://fetch.com",
+            image_url: "https://fetch.com/image.jpg",
+            news_site: "Fetch Site",
+            summary: "Fetch test summary",
+            published_at: .now,
+            updated_at: "2025-04-20T12:00:00Z",
+            featured: true,
+            launches: nil,
+            events: nil,
+            isFavorite: true
+        )
+        
+        manager.insertFavorites(article: article)
+        
+        let fetched = manager.fetchArticle(by: 4)
+        
+        #expect(fetched != nil)
+        #expect(fetched?.id == article.id)
+        #expect(fetched?.title == article.title)
     }
 }
