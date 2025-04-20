@@ -146,7 +146,8 @@ struct ListView: View {
                                 
                                 selectedArticle = isFavorite != nil ? isFavorite : article
                                 
-                            }
+                            }.accessibilityIdentifier("GridContentView")
+                        
                     } else {
                         
                         ListContentView(
@@ -161,13 +162,13 @@ struct ListView: View {
                             } onArticleTap: { article in
                                 let isFavorite = sqlManager.fetchArticle(by: article.id)
                                 selectedArticle = isFavorite != nil ? isFavorite : article
-                            }
+                            }.accessibilityIdentifier("ListContentView")
                     }
                 }
                 .navigationTitle(title)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        ToggleGridViewButton(isGridView: $isGridView)
+                        ToggleGridViewButton(isGridView: $isGridView).accessibilityIdentifier("ToggleGridViewButton")
                     }
                 }
                 .onChange(of: isGridView) { newValue in

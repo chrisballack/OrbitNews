@@ -2,7 +2,7 @@
 //  ViewModelTests.swift
 //  OrbitNewsTests
 //
-//  Created by Maria Fernanda Paz Rodriguez on 20/04/25.
+//  Created by Christians Bonilla on 20/04/25.
 //
 
 import Testing

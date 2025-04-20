@@ -59,7 +59,7 @@ struct SplashView: View {
             .navigationDestination(for: String.self) { destination in
                 if destination == "Home" {
                     HomeView(navigationPath: $path, viewModel: viewModel, sqlManager: sqlManager)
-                                            .navigationBarBackButtonHidden(true)
+                                            .navigationBarBackButtonHidden(true).accessibilityIdentifier("HomeView")
                 }
             }
         }

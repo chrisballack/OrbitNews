@@ -108,55 +108,25 @@ struct HomeView: View {
                     )
                     .transition(.move(edge: .top).combined(with: .opacity))
                     .animation(.easeInOut, value: isSearching)
+                    .accessibilityIdentifier("SearchBarView")
+                    
                 }else{
                     TabBarView(
                         selectedTab: selectedTab,
                         isSearching: isSearching,
                         onTabSelect: { selectedTab = $0; isSearching = false },
                         onSearchTap: { isSearching = true }
-                    )
+                    ).accessibilityIdentifier("TabBarView")
                 }
                 
-            }
+            }.accessibilityIdentifier("HomeViewContent")
             
             
-        }
+        }.accessibilityIdentifier("HomeViewRoot")
+            .accessibility(addTraits: .isHeader)
         
     }
     
-    @ViewBuilder
-    private func tabBarItem(icon: String, title: String, tab: Tab) -> some View {
-        Button(action: {
-            selectedTab = tab
-            isSearching = false
-        }) {
-            VStack(spacing: 4) {
-                Image(systemName: icon)
-                    .font(.system(size: 20, weight: .semibold))
-                    .foregroundColor(selectedTab == tab && !isSearching ? .tabBarActive : .tabBarUnActive)
-                Text(title)
-                    .font(.caption)
-                    .foregroundColor(selectedTab == tab && !isSearching ? .tabBarActive : .tabBarUnActive)
-            }
-        }
-    }
-    
-    @ViewBuilder
-    private func searchButton() -> some View {
-        Button(action: {
-            isSearching = true
-            selectedTab = .home
-        }) {
-            VStack(spacing: 4) {
-                Image(systemName: "magnifyingglass")
-                    .font(.system(size: 20, weight: .semibold))
-                    .foregroundColor(isSearching ? .tabBarActive : .tabBarUnActive)
-                Text(NSLocalizedString("Search", comment: ""))
-                    .font(.caption)
-                    .foregroundColor(isSearching ? .tabBarActive : .tabBarUnActive)
-            }
-        }
-    }
 }
 
 #Preview {

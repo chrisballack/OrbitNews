@@ -2,7 +2,7 @@
 //  LoadingView.swift
 //  OrbitNews
 //
-//  Created by Maria Fernanda Paz Rodriguez on 19/04/25.
+//  Created by Christians Bonilla on 19/04/25.
 //
 
 import SwiftUI

@@ -77,6 +77,7 @@ struct SearchBarView: View {
         .onAppear {
             isFocused = true
         }
+        .accessibilityIdentifier("SearchBarView")
     }
 }
 

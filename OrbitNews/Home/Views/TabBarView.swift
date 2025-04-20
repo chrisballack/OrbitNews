@@ -44,15 +44,17 @@ struct TabBarView: View {
     
     var body: some View {
         HStack {
-            tabBarItem(icon: "newspaper", title: NSLocalizedString("News", comment: ""), tab: .home)
+            tabBarItem(icon: "newspaper", title: NSLocalizedString("News", comment: ""), tab: .home).accessibilityIdentifier("tab_news")
             Spacer()
-            searchButton()
+            searchButton().accessibilityIdentifier("tab_search")
             Spacer()
-            tabBarItem(icon: "suit.heart", title: NSLocalizedString("Favorites", comment: ""), tab: .favorites)
+            tabBarItem(icon: "suit.heart", title: NSLocalizedString("Favorites", comment: ""), tab: .favorites).accessibilityIdentifier("tab_favorites")
         }
         .padding(.horizontal, 50)
         .padding(.top, 10)
         .background(Color(.black))
+        .accessibilityIdentifier("TabBarView")
+        
     }
     
     private func tabBarItem(icon: String, title: String, tab: HomeView.Tab) -> some View {
@@ -82,7 +84,7 @@ struct TabBarView: View {
                     .font(.caption)
                     .foregroundColor(isSearching ? .tabBarActive : .tabBarUnActive)
             }
-        }
+        }.accessibilityIdentifier("SearchTabButton")
     }
 }
 
