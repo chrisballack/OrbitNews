@@ -128,7 +128,6 @@ struct ListView: View {
             
         }else{
             
-            NavigationView {
                 Group {
                     if isGridView {
                         GridContentView(
@@ -209,8 +208,7 @@ struct ListView: View {
             }
             
         }
-        
-    }
+    
 }
 
 /// A view that displays articles in a grid layout.
