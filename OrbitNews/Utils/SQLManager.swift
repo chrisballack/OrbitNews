@@ -42,33 +42,49 @@ class SQLManager: ObservableObject {
         
     }
     
-    /// Opens the SQLite database from the app's document directory and creates the `Favorites` table if it doesn't already exist.
+    
+    /// Opens a connection to the SQLite database and performs necessary configurations.
     ///
-    /// This method retrieves the file URL for the SQLite database located in the app's document directory.
-    /// It then attempts to open the database at the specified file path. If the database is successfully opened,
-    /// the `Favorites` table is created (if it does not already exist) by calling the `createFavoritesTable()` method.
+    /// This function attempts to open a SQLite database located in the app's documents directory. If the database does not exist, it is created automatically.
+    /// After opening the database, this function configures it for better performance and concurrency by enabling Write-Ahead Logging (WAL) mode and setting a busy timeout.
+    /// It also calls `createFavoritesTable` to ensure the necessary table structure exists.
     ///
-    /// If the database cannot be opened, an error message is printed to the console.
+    /// - Important: Ensure that the `db` property is properly declared and initialized elsewhere in the class or struct.
+    ///              Additionally, handle errors gracefully in production code instead of using `try!` for file URL creation.
     ///
-    /// - Important: Ensure that the `db` property is properly declared and accessible before calling this method.
+    /// Example usage:
     ///
     /// ```swift
     /// openDatabase()
-    /// // Prints: "Successfully opened database at <file_path>" if the operation succeeds.
     /// ```
     func openDatabase() {
-        
         let fileURL = try! FileManager.default
             .url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
             .appendingPathComponent("LocationDatabase.sqlite")
         
-        if sqlite3_open(fileURL.path, &db) != SQLITE_OK {
-            print("Error opening database")
+        if sqlite3_open_v2(fileURL.path, &db, SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE, nil) != SQLITE_OK {
+            let errorMessage = String(cString: sqlite3_errmsg(db))
+            print("Error opening database: \(errorMessage)")
+            return
         } else {
             print("Successfully opened database at \(fileURL.path)")
-            createFavoritesTable()
         }
+        
+        if sqlite3_exec(db, "PRAGMA journal_mode=WAL;", nil, nil, nil) != SQLITE_OK {
+            let errorMessage = String(cString: sqlite3_errmsg(db))
+            print("Failed to set WAL mode: \(errorMessage)")
+        } else {
+            print("WAL mode enabled for better concurrency.")
+        }
+        
+        if sqlite3_busy_timeout(db, 5000) != SQLITE_OK {
+            let errorMessage = String(cString: sqlite3_errmsg(db))
+            print("Failed to set busy timeout: \(errorMessage)")
+        }
+        
+        createFavoritesTable()
     }
+
     
     /// Creates the `Favorites` table in the database if it does not already exist.
     ///

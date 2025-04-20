@@ -133,6 +133,11 @@ struct Authors : Codable {
         socials = try values.decodeIfPresent(Socials.self, forKey: .socials)
     }
     
+    init (name:String, socials:Socials) {
+        self.name = name
+        self.socials = socials
+    }
+    
 }
 
 struct Socials : Codable {
@@ -161,6 +166,16 @@ struct Socials : Codable {
         linkedin = try values.decodeIfPresent(String.self, forKey: .linkedin)
         mastodon = try values.decodeIfPresent(String.self, forKey: .mastodon)
         bluesky = try values.decodeIfPresent(String.self, forKey: .bluesky)
+    }
+    
+    init(x:String,youtube:String,instagram:String,linkedin:String,mastodon:String,bluesky:String) {
+        
+        self.x = x
+        self.youtube = youtube
+        self.instagram = instagram
+        self.linkedin = linkedin
+        self.mastodon = mastodon
+        self.bluesky = bluesky
     }
     
 }
