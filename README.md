@@ -4,7 +4,7 @@
 
 ## Features
 
-- **Real-time News Feed**: Fetches the latest space news articles from the Spaceflight News API.
+- **News Feed**: Fetches the latest space news articles from the Spaceflight News API.
 - **Infinite Scrolling**: Automatically loads more articles as users scroll through the content.
 - **Dual View Modes**: Toggle between list view and 2x2 grid layout for different browsing experiences.
 - **Favorites System**: Users can mark articles as favorites from the detail view, which are stored locally in an SQLite database for persistent access.
