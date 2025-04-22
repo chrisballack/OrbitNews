@@ -392,10 +392,12 @@ class SQLManager: ObservableObject {
                 let formatter = ISO8601DateFormatter()
                 let publishedAt = formatter.date(from: publishedAtStr)
                 
+                let autor = String(cString: sqlite3_column_text(queryStatement, 9))
+                
                 let article = ResultsArticles(
                     id: id,
                     title: title,
-                    authors: nil,
+                    authors: [Authors(name: autor, socials: nil)],
                     url: url,
                     image_url: imageUrl,
                     news_site: newsSite,
@@ -435,22 +437,22 @@ class SQLManager: ObservableObject {
     /// ```
     func fetchArticle(by id: Int) -> ResultsArticles? {
         let query = "SELECT * FROM Articles WHERE id = ?;"
-        var statement: OpaquePointer?
+        var queryStatement: OpaquePointer?
         
-        if sqlite3_prepare_v2(db, query, -1, &statement, nil) == SQLITE_OK {
-            sqlite3_bind_int(statement, 1, Int32(id))
+        if sqlite3_prepare_v2(db, query, -1, &queryStatement, nil) == SQLITE_OK {
+            sqlite3_bind_int(queryStatement, 1, Int32(id))
             
-            if sqlite3_step(statement) == SQLITE_ROW {
-                let id = Int(sqlite3_column_int(statement, 0))
+            if sqlite3_step(queryStatement) == SQLITE_ROW {
+                let id = Int(sqlite3_column_int(queryStatement, 0))
                 
-                let title = safeColumnText(statement: statement, column: 1)
-                let url = safeColumnText(statement: statement, column: 2)
-                let imageUrl = safeColumnText(statement: statement, column: 3)
-                let newsSite = safeColumnText(statement: statement, column: 4)
-                let summary = safeColumnText(statement: statement, column: 5)
-                let publishedAtStr = safeColumnText(statement: statement, column: 6)
-                let updatedAt = safeColumnText(statement: statement, column: 7)
-                let featured = sqlite3_column_int(statement, 8) == 1
+                let title = safeColumnText(statement: queryStatement, column: 1)
+                let url = safeColumnText(statement: queryStatement, column: 2)
+                let imageUrl = safeColumnText(statement: queryStatement, column: 3)
+                let newsSite = safeColumnText(statement: queryStatement, column: 4)
+                let summary = safeColumnText(statement: queryStatement, column: 5)
+                let publishedAtStr = safeColumnText(statement: queryStatement, column: 6)
+                let updatedAt = safeColumnText(statement: queryStatement, column: 7)
+                let featured = sqlite3_column_int(queryStatement, 8) == 1
                 
                 var publishedAt: Date? = nil
                 if !publishedAtStr.isEmpty {
@@ -458,10 +460,12 @@ class SQLManager: ObservableObject {
                     publishedAt = formatter.date(from: publishedAtStr)
                 }
                 
+                let autor = String(cString: sqlite3_column_text(queryStatement, 9))
+                
                 let article = ResultsArticles(
                     id: id,
                     title: title,
-                    authors: nil,
+                    authors: [Authors(name: autor, socials: nil)],
                     url: url,
                     image_url: imageUrl,
                     news_site: newsSite,
@@ -474,14 +478,14 @@ class SQLManager: ObservableObject {
                     isFavorite: true
                 )
                 
-                sqlite3_finalize(statement)
+                sqlite3_finalize(queryStatement)
                 return article
             }
         } else {
             print("SELECT error: \(String(cString: sqlite3_errmsg(db)))")
         }
         
-        sqlite3_finalize(statement)
+        sqlite3_finalize(queryStatement)
         return nil
     }
     
@@ -531,10 +535,12 @@ class SQLManager: ObservableObject {
                     publishedAt = formatter.date(from: publishedAtStr)
                 }
                 
+                let autor = String(cString: sqlite3_column_text(queryStatement, 9))
+                
                 let article = ResultsArticles(
                     id: id,
                     title: title,
-                    authors: nil,
+                    authors: [Authors(name: autor, socials: nil)],
                     url: url,
                     image_url: imageUrl,
                     news_site: newsSite,

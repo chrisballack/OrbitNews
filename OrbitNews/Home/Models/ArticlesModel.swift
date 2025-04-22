@@ -133,7 +133,7 @@ struct Authors : Codable {
         socials = try values.decodeIfPresent(Socials.self, forKey: .socials)
     }
     
-    init (name:String, socials:Socials) {
+    init (name:String, socials:Socials?) {
         self.name = name
         self.socials = socials
     }
